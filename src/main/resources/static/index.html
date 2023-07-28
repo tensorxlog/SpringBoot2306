@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+    <h1>-<h6>:标题，标题独占一行，分为1级-6级标题
+    <center>:居中，该标签后期不再建议使用了。后期控制组件布局靠CSS样式。因此该标签临时使用
+    <input>:输入组件，用于获取用户在页面上输入的内容。
+            输入组件的样子有很多，可以通过type属性来指定，常见的有:
+            type="text"       文本框
+            type="password"   密码框
+            type="checkbox"   多选框
+            type="radio"      单选框
+            type="button"     按钮
+
+            注:像单选框，复选框这类组件，使用时会将多个组件划分为一组，使用name属性为组件取名字，
+               名字相同的组件就是一组的。
+    <br>:换行
+
+    <table>:表格。属性border用于指定边框。
+          <table>标签中包含<tr>标签用于表示行
+          <tr>标签中包含<td>标签用于表示列
+          <td>标签中常见属性:
+          align:对其方式。left左对齐,right右对齐,center剧中对其
+          colspan:跨列合并列，合并是从左向右合并列
+          rowspan:跨行合并列，合并是从上向下合并列
+ -->
+<center>
+    <h1>百度</h1>
+    <input type="text"/>
+    <input type="button" value="搜索" onClick="alert('试试')"/>
+    <br>
+    <input type="radio" name="gender"/>男 <input type="radio" name="gender"/>女
+    <br>
+    <a href="/classtable.html">课程表</a>
+    <a href="/reg.html">用户注册</a>
+    <a href="/login.html">用户登录</a>
+    <a href="/writeArticle.html">发表文章</a>
+    <br>
+    <a href="https://www.changhai.org">卢昌海主页</a>
+    <br>
+        <table border="1">
+            <tr>
+                <td><a href="https://www.changhai.org">卢昌海主页</a></td>
+                <td>2</td>
+                <td colspan="2" align="center">3</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td rowspan="2">2</td>
+                <td>3</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>3</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+            </tr>
+        </table>
+</center>
+
+</body>
+</html>
