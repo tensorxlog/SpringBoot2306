@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 import com.tedu.springboot2306.entity.User;
 
@@ -69,10 +66,35 @@ public class UserController {
         System.out.println("开始处理用户登录");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        if (username == null || username.isEmpty() ||
+        password == null || password.isEmpty()) {
+            try {
+                response.sendRedirect("login_info_error.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         File file = new File(userDir, username + ".obj");
         if (file.exists()) {
-            User user =
+            try {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+                User user = (User) ois.readObject();
+                String savedPassword = user.getPassword();
+                if (password.equals(savedPassword)) {
+                    response.sendRedirect("/login_success.html");
+                } else {
+                    response.sendRedirect("/login_fail.html");
+                }
+            } catch (IOException|ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                response.sendRedirect("login_info_error.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 }
