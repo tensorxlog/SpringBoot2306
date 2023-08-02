@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.tedu.springboot2306.entity.User;
 
 @Controller
 public class UserController {
     private static File userDir;
+    private List<User> userList = new ArrayList<>();
 
     static {
         userDir = new File("./userdir");
@@ -77,8 +80,7 @@ public class UserController {
         }
         File file = new File(userDir, username + ".obj");
         if (file.exists()) {
-            try {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));) {
                 User user = (User) ois.readObject();
                 String savedPassword = user.getPassword();
                 if (password.equals(savedPassword)) {
@@ -96,5 +98,55 @@ public class UserController {
                 e.printStackTrace();
             }
         }
+    }
+
+    @RequestMapping("/userlist")
+    public void userList(HttpServletRequest request, HttpServletResponse response) {
+        userList.clear();
+        File[] files = userDir.listFiles(file -> file.getName().endsWith(".obj"));
+        for (File file: files) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                userList.add((User) ois.readObject());
+            } catch (IOException|ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            PrintWriter pw = response.getWriter();
+            pw.println("<!DOCTYPE html>\n" +
+                    "<html>\n" +
+                    "<head>" +
+                    "<meta charset=\"utf-8\">" +
+                    "</head>" +
+                    "<body>" +
+                    "<center>" +
+                    "<h1>用户列表</h1>" +
+                    "<table border=\"1\">");
+            pw.println(
+                    "<tr>" +
+                    "<td>用户名</td>" +
+                    "<td>密码</td>" +
+                    "<td>昵称</td>" +
+                    "<td>年龄</td>" +
+                    "</tr>");
+            for (User user: userList) {
+                pw.println(
+                    "<tr>" +
+                    "<td>" + user.getUsername() + "</td>" +
+                    "<td>" + user.getPassword() + "</td>" +
+                    "<td>" + user.getNickname() + "</td>" +
+                    "<td>" + user.getAge() + "</td>" +
+                    "</tr>");
+            }
+            pw.println("</table>" +
+                    "<a href=\"/index.html\">返回首页</a>" +
+                    "</center></body>");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(userList);
     }
 }
